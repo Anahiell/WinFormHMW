@@ -64,9 +64,6 @@ namespace Maze
 
         public void PointUp()
         {
-            MazeObject.MazeObjectType current = MazeObject.MazeObjectType.STAR;
-            objects[1, countMedals] = new MazeObject(current);
-            images[1, countMedals].BackgroundImage = objects[1, countMedals].texture;
             countMedals++;
         }
         void Generate()
@@ -140,7 +137,7 @@ namespace Maze
                     images[y, x].BackgroundImage = objects[y, x].texture;
                 }
             }
-
+            //подсчет медалей на поле
             for (int y = 3; y < height - 1; y++)
             {
                 for (int x = 1; x < width - 1; x++)
@@ -151,30 +148,6 @@ namespace Maze
                     }
                 }
             }
-            //поле для инфы
-            for (int y = 0; y < 2; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    MazeObject.MazeObjectType current = MazeObject.MazeObjectType.HALL;
-                    if (y == 0 && x == 0)
-                    {
-                        current = MazeObject.MazeObjectType.HELTH;
-                    }
-                    if (y == 1 && x < createMedals)
-                    {
-                        current = MazeObject.MazeObjectType.EMPTY;
-                    }
-                    objects[y, x] = new MazeObject(current);
-                    images[y, x] = new PictureBox();
-                    images[y, x].Location = new Point(x * objects[y, x].width, y * objects[y, x].height);
-                    images[y, x].Parent = parent;
-                    images[y, x].Width = objects[y, x].width;
-                    images[y, x].Height = objects[y, x].height;
-                    images[y, x].BackgroundImage = objects[y, x].texture;
-                }
-            }
-
         }
     }
 }

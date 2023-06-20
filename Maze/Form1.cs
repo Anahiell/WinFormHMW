@@ -15,6 +15,15 @@ namespace Maze
 
         Labirint l; // ссылка на логику всего происходящего в лабиринте
 
+        int steps = 0;//кол-во шагов
+
+        int timeSec;
+        int timeMin;
+
+        float tick_tack;
+
+
+        DateTime timeL;
         public Form1()
         {
             InitializeComponent();
@@ -36,8 +45,23 @@ namespace Maze
         public void StartGame()
         {
             l = new Labirint(this, columns, rows);
-            progressBar1.Value = 100;
-            textBox1.Text = $"{l.helthPoint} HP";
+
+            Helth_point_bar.Value = 100;
+            toolStripStatusLabel2.Text = $"{l.helthPoint} HP";//состояние хп
+
+            scoreStLabl.Text = $"{l.createMedals}/{l.countMedals}";//медали
+
+            toolsStep.Text = $"Steps:{steps}";//шаги
+
+            timeSec = 0;
+            timeMin = 0;
+            timer1 = new Timer();
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
+            timer1.Start();
+
+
+            timeLook.Text = $"{timeMin}:{timeSec}";
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -47,6 +71,7 @@ namespace Maze
                 if (l.objects[l.CharacterPositionY, l.CharacterPositionX + 1].type ==
                     MazeObject.MazeObjectType.HALL) // проверяем ячейку правее на 1 позицию, является ли она коридором
                 {
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -61,6 +86,7 @@ namespace Maze
                 {
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
 
+                    steps++;
                     l.PointUp();
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -73,6 +99,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY, l.CharacterPositionX + 1].type ==
                     MazeObject.MazeObjectType.ENEMY))
                 {
+
+                    steps++;
                     if ((l.helthPoint - l.RandDamage()) <= 0)
                     {
                         MessageBox.Show("Потрачено", "You LOSE!!!", MessageBoxButtons.OK);
@@ -93,6 +121,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY, l.CharacterPositionX + 1].type ==
                     MazeObject.MazeObjectType.HELTH) && l.helthPoint != 100)
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -123,6 +153,8 @@ namespace Maze
                 if (l.objects[l.CharacterPositionY, l.CharacterPositionX - 1].type ==
                    MazeObject.MazeObjectType.HALL) // проверяем ячейку левее на 1 позицию, является ли она коридором
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -135,6 +167,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY, l.CharacterPositionX - 1].type ==
                     MazeObject.MazeObjectType.MEDAL) && (l.countMedals != l.createMedals)) // проверяем ячейку правее на 1 позицию, является ли она Medal
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
 
                     l.PointUp();
@@ -150,6 +184,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY, l.CharacterPositionX - 1].type ==
                     MazeObject.MazeObjectType.ENEMY))
                 {
+
+                    steps++;
                     if ((l.helthPoint - l.RandDamage()) <= 0)
                     {
                         MessageBox.Show("Потрачено", "You LOSE!!!", MessageBoxButtons.OK);
@@ -169,6 +205,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY, l.CharacterPositionX - 1].type ==
                    MazeObject.MazeObjectType.HELTH) && l.helthPoint < 100)
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -182,9 +220,12 @@ namespace Maze
             }
             else if (e.KeyCode == Keys.Down || e.KeyCode == Keys.S)
             {
+
                 if (l.objects[l.CharacterPositionY + 1, l.CharacterPositionX].type ==
                                    MazeObject.MazeObjectType.HALL) // проверяем ячейку снизу на 1 позицию, является ли она коридором
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -197,6 +238,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY + 1, l.CharacterPositionX].type ==
                     MazeObject.MazeObjectType.MEDAL) && (l.countMedals != l.createMedals)) // проверяем ячейку правее на 1 позицию, является ли она Medal
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
 
                     l.PointUp();
@@ -212,6 +255,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY + 1, l.CharacterPositionX].type ==
                     MazeObject.MazeObjectType.ENEMY))
                 {
+
+                    steps++;
                     if ((l.helthPoint - l.RandDamage()) <= 0)
                     {
                         MessageBox.Show("Потрачено", "You LOSE!!!", MessageBoxButtons.OK);
@@ -233,6 +278,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY + 1, l.CharacterPositionX].type ==
                    MazeObject.MazeObjectType.HELTH) && l.helthPoint < 100)
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -249,6 +296,8 @@ namespace Maze
                 if (l.objects[l.CharacterPositionY - 1, l.CharacterPositionX].type ==
                                    MazeObject.MazeObjectType.HALL) // проверяем ячейку вверху на 1 позицию, является ли она коридором
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -261,6 +310,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY - 1, l.CharacterPositionX].type ==
                     MazeObject.MazeObjectType.MEDAL) && (l.countMedals != l.createMedals)) // проверяем ячейку правее на 1 позицию, является ли она Medal
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
 
                     l.PointUp();
@@ -276,6 +327,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY - 1, l.CharacterPositionX].type ==
                     MazeObject.MazeObjectType.ENEMY))
                 {
+
+                    steps++;
                     if ((l.helthPoint - l.RandDamage()) <= 0)
                     {
                         MessageBox.Show("Потрачено", "You LOSE!!!", MessageBoxButtons.OK);
@@ -297,6 +350,8 @@ namespace Maze
                 else if ((l.objects[l.CharacterPositionY - 1, l.CharacterPositionX].type ==
                    MazeObject.MazeObjectType.HELTH) && (l.helthPoint < 100))
                 {
+
+                    steps++;
                     l.objects[l.CharacterPositionY, l.CharacterPositionX] = new MazeObject(MazeObject.MazeObjectType.HALL);
                     l.images[l.CharacterPositionY, l.CharacterPositionX].BackgroundImage = l.objects[l.CharacterPositionY, l.CharacterPositionX].texture;
 
@@ -312,9 +367,42 @@ namespace Maze
             {
                 MessageBox.Show("Успех", "You WIN!!!", MessageBoxButtons.OK);
             }
+            //меньше 45 хп цвет становится красным
+            if (Math.Round(l.helthPoint, 1) < 45)
+            {
+                toolStripStatusLabel2.BackColor = Color.OrangeRed;
+            }
+            else
+                toolStripStatusLabel2.BackColor = Color.Lime;
             var t = Math.Round(l.helthPoint, 1);
-            textBox1.Text = $"{t} HP";
-            progressBar1.Value = (int)(l.helthPoint);
+            toolStripStatusLabel2.Text = $"{t} HP";
+            Helth_point_bar.Value = (int)l.helthPoint;
+            scoreStLabl.Text = $"{l.createMedals}/{l.countMedals}";
+            toolsStep.Text = $"Steps:{steps}";
+
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            timeSec++;
+            timeMin += timeSec / 60;
+            if (timeSec > 60) timeSec = 0;
+            timeLook.Text = $"{timeMin}:{timeSec}";
+
+            //чем дольше тикает тем краснее становитсяъ
+            Random rnd = new Random();
+            int R = 0;
+            int G = 255;
+            int B = 0;
+            if (tick_tack >= 1f && tick_tack < 255)
+            {
+                R += (int)tick_tack;
+                G -= (int)tick_tack;
+
+
+                timeLook.BackColor = Color.FromArgb(R, G, B);
+            }
+            tick_tack += 10f;
         }
     }
 }
